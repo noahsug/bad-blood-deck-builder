@@ -12,29 +12,29 @@ class DeckBuilder
 
   setPlayerCards: (@playerCards...) ->
 
-  printResults: ->
-    decks = @getBestDecks()
-    for playerDeck, i in decks
-      console.log "##{decks.length-i} wins #{Math.round(playerDeck.totalScore)}% #{playerDeck}"
+  printResults: (decks) ->
+    for i in [decks.length - 1..0]
+      playerDeck = decks[i]
+      log "##{i+1} wins #{Math.round(playerDeck.totalScore)}% #{playerDeck}"
       for opponentDeck in @opponentDecks
-        console.log '  ', playerDeck.scoreMap[opponentDeck], 'vs', opponentDeck.toString()
+        log '  ', playerDeck.scoreMap[opponentDeck], 'vs', opponentDeck.toString()
 
   getBestDecks: ->
     playerDecks = @getPossibleDecks()
-    console.log playerDecks.length, 'possible decks found'
-    console.log ''
     for playerDeck in playerDecks
       playerDeck.totalScore = 0
       playerDeck.scoreMap = {}
-      console.log 'Intermediate scores for', playerDeck.toString()
+      log 'Intermediate scores for', playerDeck.toString()
       for opponentDeck in @opponentDecks
         score = @scoreDeck playerDeck, opponentDeck
-        console.log score, 'vs', opponentDeck.toString()
+        log score, 'vs', opponentDeck.toString()
         playerDeck.scoreMap[opponentDeck] = score
         playerDeck.totalScore += score
       playerDeck.totalScore /= @opponentDecks.length
-      console.log ''
-    playerDecks.sort (a, b) -> a.totalScore - b.totalScore
+      log ''
+    bestDecks = playerDecks.sort (a, b) -> b.totalScore - a.totalScore
+    @printResults bestDecks
+    bestDecks
 
   scoreDeck: (playerDeck, opponentDeck) ->
     wins = 0
@@ -58,7 +58,10 @@ class DeckBuilder
     @forEachDeckCombination (cardIndexes) =>
       deck = (@playerCards[i] for i in cardIndexes)
       uniqueDecks[deck.sort()] = deck
-    (deck for id, deck of uniqueDecks)
+    possibleDecks = (deck for id, deck of uniqueDecks)
+    log possibleDecks.length, 'possible decks found'
+    log ''
+    possibleDecks
 
   forEachDeckCombination: (callback, position=0, indexes=new Array(6)) ->
     start = if position is 0 then 0 else indexes[position-1] + 1

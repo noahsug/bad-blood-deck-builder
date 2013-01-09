@@ -27,3 +27,8 @@ exports.pad = (text, width) ->
     text[0..width - 1]
   else
     text + (' ' for i in [text.length..width-1]).join('')
+
+exports.verbose = false
+
+exports.log = (text...) ->
+  console.log text... if exports.verbose

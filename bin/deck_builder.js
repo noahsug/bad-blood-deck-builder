@@ -24,20 +24,19 @@
       this.playerCards = playerCards;
     };
 
-    DeckBuilder.prototype.printResults = function() {
-      var decks, i, opponentDeck, playerDeck, _i, _len, _results;
-      decks = this.getBestDecks();
+    DeckBuilder.prototype.printResults = function(decks) {
+      var i, opponentDeck, playerDeck, _i, _ref, _results;
       _results = [];
-      for (i = _i = 0, _len = decks.length; _i < _len; i = ++_i) {
+      for (i = _i = _ref = decks.length - 1; _ref <= 0 ? _i <= 0 : _i >= 0; i = _ref <= 0 ? ++_i : --_i) {
         playerDeck = decks[i];
-        console.log("#" + (decks.length - i) + " wins " + (Math.round(playerDeck.totalScore)) + "% " + playerDeck);
+        log("#" + (i + 1) + " wins " + (Math.round(playerDeck.totalScore)) + "% " + playerDeck);
         _results.push((function() {
-          var _j, _len1, _ref, _results1;
-          _ref = this.opponentDecks;
+          var _j, _len, _ref1, _results1;
+          _ref1 = this.opponentDecks;
           _results1 = [];
-          for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-            opponentDeck = _ref[_j];
-            _results1.push(console.log('  ', playerDeck.scoreMap[opponentDeck], 'vs', opponentDeck.toString()));
+          for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
+            opponentDeck = _ref1[_j];
+            _results1.push(log('  ', playerDeck.scoreMap[opponentDeck], 'vs', opponentDeck.toString()));
           }
           return _results1;
         }).call(this));
@@ -46,29 +45,29 @@
     };
 
     DeckBuilder.prototype.getBestDecks = function() {
-      var opponentDeck, playerDeck, playerDecks, score, _i, _j, _len, _len1, _ref;
+      var bestDecks, opponentDeck, playerDeck, playerDecks, score, _i, _j, _len, _len1, _ref;
       playerDecks = this.getPossibleDecks();
-      console.log(playerDecks.length, 'possible decks found');
-      console.log('');
       for (_i = 0, _len = playerDecks.length; _i < _len; _i++) {
         playerDeck = playerDecks[_i];
         playerDeck.totalScore = 0;
         playerDeck.scoreMap = {};
-        console.log('Intermediate scores for', playerDeck.toString());
+        log('Intermediate scores for', playerDeck.toString());
         _ref = this.opponentDecks;
         for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
           opponentDeck = _ref[_j];
           score = this.scoreDeck(playerDeck, opponentDeck);
-          console.log(score, 'vs', opponentDeck.toString());
+          log(score, 'vs', opponentDeck.toString());
           playerDeck.scoreMap[opponentDeck] = score;
           playerDeck.totalScore += score;
         }
         playerDeck.totalScore /= this.opponentDecks.length;
-        console.log('');
+        log('');
       }
-      return playerDecks.sort(function(a, b) {
-        return a.totalScore - b.totalScore;
+      bestDecks = playerDecks.sort(function(a, b) {
+        return b.totalScore - a.totalScore;
       });
+      this.printResults(bestDecks);
+      return bestDecks;
     };
 
     DeckBuilder.prototype.scoreDeck = function(playerDeck, opponentDeck) {
@@ -95,7 +94,7 @@
     };
 
     DeckBuilder.prototype.getPossibleDecks = function() {
-      var deck, id, maxDeckSize, uniqueDecks, _results,
+      var deck, id, maxDeckSize, possibleDecks, uniqueDecks,
         _this = this;
       maxDeckSize = 6;
       uniqueDecks = {};
@@ -112,12 +111,18 @@
         }).call(_this);
         return uniqueDecks[deck.sort()] = deck;
       });
-      _results = [];
-      for (id in uniqueDecks) {
-        deck = uniqueDecks[id];
-        _results.push(deck);
-      }
-      return _results;
+      possibleDecks = (function() {
+        var _results;
+        _results = [];
+        for (id in uniqueDecks) {
+          deck = uniqueDecks[id];
+          _results.push(deck);
+        }
+        return _results;
+      })();
+      log(possibleDecks.length, 'possible decks found');
+      log('');
+      return possibleDecks;
     };
 
     DeckBuilder.prototype.forEachDeckCombination = function(callback, position, indexes) {

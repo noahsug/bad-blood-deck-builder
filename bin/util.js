@@ -1,5 +1,6 @@
 (function() {
-  var exports;
+  var exports,
+    __slice = [].slice;
 
   exports = window;
 
@@ -51,6 +52,16 @@
         }
         return _results;
       })()).join('');
+    }
+  };
+
+  exports.verbose = false;
+
+  exports.log = function() {
+    var text;
+    text = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    if (exports.verbose) {
+      return console.log.apply(console, text);
     }
   };
 
