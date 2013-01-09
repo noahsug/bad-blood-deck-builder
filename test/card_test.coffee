@@ -1,9 +1,13 @@
 describe 'A card', ->
-  wolf = soldier = undefined
+  attack = wolf = soldier = undefined
 
   beforeEach ->
-    wolf = cardFactory.create 'wolf'
-    soldier = cardFactory.create 'soldier'
+    wolf = cardFactory.create addCard 1, 4, 2
+    soldier = cardFactory.create addCard 1, 5, 2
+
+  attack = (attackingCard, defendingCard) ->
+    opponent = { getTargetAt: -> defendingCard }
+    attackingCard.attack opponent
 
   it 'is created using a card factory', ->
     expect(wolf).toBeDefined()
@@ -17,16 +21,16 @@ describe 'A card', ->
 
   it 'can attack another card', ->
     expect(soldier.health).toBe cardFactory.cards.soldier.health
-    wolf.attack soldier
+    attack wolf, soldier
     expect(soldier.health).toBe cardFactory.cards.soldier.health - 1
 
   it 'defends when attacked', ->
     spyOn soldier, 'defend'
-    wolf.attack soldier
+    attack wolf, soldier
     expect(soldier.defend).toHaveBeenCalled()
 
   it 'dies when health is 0 or less', ->
     oneHealthCreature = cardFactory.create addCard 1, 1, 1
     expect(oneHealthCreature.isAlive()).toBe true
-    wolf.attack oneHealthCreature
+    attack wolf, oneHealthCreature
     expect(oneHealthCreature.isAlive()).toBe false

@@ -53,15 +53,15 @@ describe 'A player', ->
     expect(player.waiting.length).toBe 0
     expect(player.field.length).toBe 1
 
-  it 'returns the card at the given index in the field with getTarget()', ->
+  it 'returns the card at the given index in the field with getTargetAt()', ->
     waitingCard = addCard 1, 1, 1
     player.setCards waitingCard
     player.drawCard()
     player.reduceWait()
-    expect(player.getTarget(0)).toBe player.field[0]
+    expect(player.getTargetAt(0)).toBe player.field[0]
 
   it 'returns itself if no card exists at the given index', ->
-    expect(player.getTarget(0)).toBe player
+    expect(player.getTargetAt(0)).toBe player
 
   it 'can attack and kill another player attack(player)', ->
     summonSlime()

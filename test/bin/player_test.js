@@ -57,16 +57,16 @@
       expect(player.waiting.length).toBe(0);
       return expect(player.field.length).toBe(1);
     });
-    it('returns the card at the given index in the field with getTarget()', function() {
+    it('returns the card at the given index in the field with getTargetAt()', function() {
       var waitingCard;
       waitingCard = addCard(1, 1, 1);
       player.setCards(waitingCard);
       player.drawCard();
       player.reduceWait();
-      return expect(player.getTarget(0)).toBe(player.field[0]);
+      return expect(player.getTargetAt(0)).toBe(player.field[0]);
     });
     it('returns itself if no card exists at the given index', function() {
-      return expect(player.getTarget(0)).toBe(player);
+      return expect(player.getTargetAt(0)).toBe(player);
     });
     it('can attack and kill another player attack(player)', function() {
       summonSlime();

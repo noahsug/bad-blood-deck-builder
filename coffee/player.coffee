@@ -26,9 +26,9 @@ class Player extends Target
 
   attack: (opponent) ->
     for card, i in @field
-      card.attack opponent.getTarget i
+      card.attack opponent, i
 
-  getTarget: (index) ->
+  getTargetAt: (index) ->
     if @field.length > index and @field[index].isAlive()
       @field[index]
     else

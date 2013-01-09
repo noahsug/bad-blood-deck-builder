@@ -16,10 +16,10 @@ class Card extends Target
     ability.setCard this
     @defendAbilities.push ability
 
-  attack: (target) ->
+  attack: (opponent, position) ->
     for ability in @attackAbilities
-      ability.actOn target
-    target.defend this
+      ability.actOn opponent, position
+    opponent.getTargetAt(position).defend this
 
   defend: (target) ->
     for ability in @defendAbilities

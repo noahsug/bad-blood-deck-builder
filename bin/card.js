@@ -28,14 +28,14 @@
       return this.defendAbilities.push(ability);
     };
 
-    Card.prototype.attack = function(target) {
+    Card.prototype.attack = function(opponent, position) {
       var ability, _i, _len, _ref;
       _ref = this.attackAbilities;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         ability = _ref[_i];
-        ability.actOn(target);
+        ability.actOn(opponent, position);
       }
-      return target.defend(this);
+      return opponent.getTargetAt(position).defend(this);
     };
 
     Card.prototype.defend = function(target) {

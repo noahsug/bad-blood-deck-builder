@@ -17,7 +17,10 @@
       this.card = card;
     };
 
-    Ability.prototype.actOn = function(target) {};
+    Ability.prototype.actOn = function(opponent, position) {
+      this.opponent = opponent;
+      this.position = position;
+    };
 
     return Ability;
 
@@ -31,8 +34,8 @@
       return Damage.__super__.constructor.apply(this, arguments);
     }
 
-    Damage.prototype.actOn = function(target) {
-      return target.health -= this.card.dmg;
+    Damage.prototype.actOn = function(opponent, position) {
+      return opponent.getTargetAt(position).health -= this.card.dmg;
     };
 
     return Damage;

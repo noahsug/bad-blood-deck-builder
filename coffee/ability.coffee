@@ -5,9 +5,9 @@ exportClass = (ability) ->
 class Ability
   setCard: (@card) ->
 
-  actOn: (target) ->
+  actOn: (@opponent, @position) ->
 
 class Damage extends Ability
-  actOn: (target) ->
-    target.health -= @card.dmg
+  actOn: (opponent, position) ->
+    opponent.getTargetAt(position).health -= @card.dmg
 exportClass Damage

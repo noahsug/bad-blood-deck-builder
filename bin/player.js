@@ -66,12 +66,12 @@
       _results = [];
       for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
         card = _ref[i];
-        _results.push(card.attack(opponent.getTarget(i)));
+        _results.push(card.attack(opponent, i));
       }
       return _results;
     };
 
-    Player.prototype.getTarget = function(index) {
+    Player.prototype.getTargetAt = function(index) {
       if (this.field.length > index && this.field[index].isAlive()) {
         return this.field[index];
       } else {
