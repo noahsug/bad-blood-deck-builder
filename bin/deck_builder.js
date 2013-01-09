@@ -4,6 +4,10 @@
 
   DeckBuilder = (function() {
 
+    DeckBuilder.prototype.NUM_TRIALS = 10000;
+
+    DeckBuilder.prototype.PLAYER_HP = 25;
+
     function DeckBuilder() {
       this.opponentDecks = [];
     }
@@ -21,18 +25,18 @@
     };
 
     DeckBuilder.prototype.printResults = function() {
-      var i, opponentDeck, playerDeck, _i, _len, _ref, _results;
-      _ref = this.getBestDecks();
+      var decks, i, opponentDeck, playerDeck, _i, _len, _results;
+      decks = this.getBestDecks();
       _results = [];
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        playerDeck = _ref[i];
-        console.log("#" + (i + 1) + " (" + playerDeck.totalScore + ") - " + playerDeck);
+      for (i = _i = 0, _len = decks.length; _i < _len; i = ++_i) {
+        playerDeck = decks[i];
+        console.log("#" + (decks.length - i) + " wins " + (Math.round(playerDeck.totalScore)) + "% " + playerDeck);
         _results.push((function() {
-          var _j, _len1, _ref1, _results1;
-          _ref1 = this.opponentDecks;
+          var _j, _len1, _ref, _results1;
+          _ref = this.opponentDecks;
           _results1 = [];
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            opponentDeck = _ref1[_j];
+          for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+            opponentDeck = _ref[_j];
             _results1.push(console.log('  ', playerDeck.scoreMap[opponentDeck], 'vs', opponentDeck.toString()));
           }
           return _results1;
@@ -59,32 +63,32 @@
           playerDeck.scoreMap[opponentDeck] = score;
           playerDeck.totalScore += score;
         }
+        playerDeck.totalScore /= this.opponentDecks.length;
         console.log('');
       }
       return playerDecks.sort(function(a, b) {
-        return b.totalScore - a.totalScore;
+        return a.totalScore - b.totalScore;
       });
     };
 
     DeckBuilder.prototype.scoreDeck = function(playerDeck, opponentDeck) {
-      var game, i, totalGames, wins, _i;
-      totalGames = 10000;
+      var game, i, wins, _i, _ref;
       wins = 0;
-      for (i = _i = 1; 1 <= totalGames ? _i <= totalGames : _i >= totalGames; i = 1 <= totalGames ? ++_i : --_i) {
+      for (i = _i = 1, _ref = this.NUM_TRIALS; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
         game = this.createGame(playerDeck, opponentDeck);
         if (game.run()) {
           wins++;
         }
       }
-      return (wins * 100) / totalGames;
+      return wins * 100 / this.NUM_TRIALS;
     };
 
     DeckBuilder.prototype.createGame = function(playerDeck, opponentDeck) {
       var game, opponent, player;
       game = new Game();
-      player = new Player(20);
+      player = new Player(this.PLAYER_HP);
       player.setCards.apply(player, playerDeck);
-      opponent = new Player(20);
+      opponent = new Player(this.PLAYER_HP);
       opponent.setCards.apply(opponent, opponentDeck);
       game.setPlayers(player, opponent);
       return game;

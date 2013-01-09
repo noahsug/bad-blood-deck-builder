@@ -1,5 +1,9 @@
 class DeckBuilder
 
+  NUM_TRIALS: 10000
+
+  PLAYER_HP: 25
+
   constructor: ->
     @opponentDecks = []
 
@@ -9,8 +13,9 @@ class DeckBuilder
   setPlayerCards: (@playerCards...) ->
 
   printResults: ->
-    for playerDeck, i in @getBestDecks()
-      console.log "##{i+1} (#{playerDeck.totalScore}) - #{playerDeck}"
+    decks = @getBestDecks()
+    for playerDeck, i in decks
+      console.log "##{decks.length-i} wins #{Math.round(playerDeck.totalScore)}% #{playerDeck}"
       for opponentDeck in @opponentDecks
         console.log '  ', playerDeck.scoreMap[opponentDeck], 'vs', opponentDeck.toString()
 
@@ -27,22 +32,22 @@ class DeckBuilder
         console.log score, 'vs', opponentDeck.toString()
         playerDeck.scoreMap[opponentDeck] = score
         playerDeck.totalScore += score
+      playerDeck.totalScore /= @opponentDecks.length
       console.log ''
-    playerDecks.sort (a, b) -> b.totalScore - a.totalScore
+    playerDecks.sort (a, b) -> a.totalScore - b.totalScore
 
   scoreDeck: (playerDeck, opponentDeck) ->
-    totalGames = 10000
     wins = 0
-    for i in [1..totalGames]
+    for i in [1..@NUM_TRIALS]
       game = @createGame playerDeck, opponentDeck
       wins++ if game.run()
-    (wins * 100) / totalGames
+    wins * 100 / @NUM_TRIALS
 
   createGame: (playerDeck, opponentDeck) ->
     game = new Game()
-    player = new Player 20
+    player = new Player @PLAYER_HP
     player.setCards playerDeck...
-    opponent = new Player 20
+    opponent = new Player @PLAYER_HP
     opponent.setCards opponentDeck...
     game.setPlayers player, opponent
     game
