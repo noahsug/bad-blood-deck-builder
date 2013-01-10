@@ -20,7 +20,11 @@ class Target extends EventEmitter
     @emit 'attacked', card
     @takeDmg dmg
 
-  takeDmg: (dmg) ->
-    @health -= dmg
+  takeDmg: (amount) ->
+    @health -= amount
+
+  heal: (amount) ->
+    @health += amount
+    @health = @initHealth if @health > @initHealth
 
 window.Target = Target

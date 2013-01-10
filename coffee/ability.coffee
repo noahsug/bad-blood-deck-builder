@@ -5,6 +5,7 @@ exportClass = (ability) ->
 class Ability
   setCard: (@card) ->
     @card.on 'attack', => @onAttack?()
+    @card.on 'preattack', => @onPreattack?()
 
   target: ->
     @card.owner.opponent.getTargetAt @card.position
@@ -41,3 +42,14 @@ class PayLife extends Ability
   onAttack: ->
     @card.health -= @amount
 exportClass PayLife
+
+class Heal extends Ability
+  constructor: (@amount=1) ->
+
+  onPreattack: ->
+    lowestHp = undefined
+    for card in @card.owner.field
+      continue if not card.isAlive() or card.health is card.initHealth
+      lowestHp = card if not lowestHp or card.health < lowestHp.health
+    lowestHp?.heal @amount
+exportClass Heal
