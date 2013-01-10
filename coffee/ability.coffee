@@ -4,8 +4,10 @@ exportClass = (ability) ->
 
 class Ability
   setCard: (@card) ->
-    @card.on 'attack', => @onAttack?()
-    @card.on 'preattack', => @onPreattack?()
+    @card.on 'attack', => @onAttack() if @onAttack
+    @card.on 'preattack', => @onPreattack() if @onPreattack
+    @card.on 'die', => @onDie() if @onDie
+    @card.on 'spawn', => @addOwnerListeners(); @onSpawn?()
 
   target: ->
     @card.owner.opponent.getTargetAt @card.position
@@ -16,16 +18,20 @@ class Ability
       alive.push card
     getRandomElement alive
 
+  addOwnerListeners: ->
+    @card.owner.on 'turn_start', => (@onTurnStart() if @card.isAlive()) if @onTurnStart
+    @card.owner.on 'turn_end', => (@onTurnEnd() if @card.isAlive()) if @onTurnEnd
+
 class Damage extends Ability
   onAttack: ->
-    @target().onAttacked @card, @card.getDmg()
+    @target().onAttacked @card, @card.dmg
 exportClass Damage
 
 class Sap extends Ability
   constructor: (@amount=1) ->
 
   onAttack: ->
-    @target().effects.dmgModifier -= @amount
+    @target().dmg -= @amount
 exportClass Sap
 
 class Trap extends Ability
@@ -62,3 +68,23 @@ class Poison extends Ability
     target.once 'postattack', =>
       target.takeDmg @amount if target.isAlive()
 exportClass Poison
+
+class AdjacentAttackBoost extends Ability
+  constructor: (@amount=1) ->
+    @left = @right = undefined
+
+  onTurnStart: ->
+    @debuff()
+    @left = @card.owner.field[@card.position-1]
+    @right = @card.owner.field[@card.position+1]
+    @left?.dmg += @amount
+    @right?.dmg += @amount
+
+  onDie: ->
+    @debuff()
+
+  debuff: ->
+    @left?.dmg -= @amount
+    @right?.dmg -= @amount
+
+exportClass AdjacentAttackBoost

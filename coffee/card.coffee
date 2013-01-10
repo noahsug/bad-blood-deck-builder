@@ -13,14 +13,14 @@ class Card extends Target
     ability.setCard this
     @abilities.push ability
 
+  spawnAt: (@position) ->
+    @emit 'spawn'
+
   attack: ->
     @emit 'preattack'
-    if @getDmg() > 0 and not @effects.skipAction
+    if @dmg > 0 and not @effects.skipAction
       @emit 'attack'
     @emit 'postattack'
-
-  getDmg: ->
-    @dmg + @effects.dmgModifier
 
   getState: ->
     "#{@dmg}/#{@health}/#{@wait}"

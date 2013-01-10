@@ -10,7 +10,6 @@ class Target extends EventEmitter
 
   initializeEffects: ->
     @effects = {}
-    @effects.dmgModifier = 0
     @effects.skipAction = false
 
   isAlive: ->
@@ -22,9 +21,13 @@ class Target extends EventEmitter
 
   takeDmg: (amount) ->
     @health -= amount
+    @die() if @health <= 0
 
   heal: (amount) ->
     @health += amount
     @health = @initHealth if @health > @initHealth
+
+  die: ->
+    @emit 'die'
 
 window.Target = Target

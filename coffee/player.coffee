@@ -23,10 +23,11 @@ class Player extends Target
       card.wait -= 1
       if card.wait <= 0
         @field.push card
-        card.position = @field.length - 1
+        card.spawnAt @field.length - 1
       else
         newWaiting.push card
     @waiting = newWaiting
+    @emit 'turn_start'
 
   drawCard: ->
     if @deck.length > 0
@@ -49,6 +50,7 @@ class Player extends Target
         newField.push card
         card.position = newField.length - 1
     @field = newField
+    @emit 'turn_end'
 
   isAlive: ->
     super() and (@field.length > 0 or @deck.length > 0 or @waiting.length > 0)
