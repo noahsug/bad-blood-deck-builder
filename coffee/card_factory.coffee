@@ -4,8 +4,8 @@ class CardFactory
     stats = @cards[name]
     card = new Card stats.health, stats.dmg, stats.wait
     card.name = name
-    for abilityClass in stats.abilities ? []
-      card.addAbility new abilityClass()
+    for ability in stats.getAbilities() ? []
+      card.addAbility ability
     return card
 
   cards:
@@ -14,12 +14,12 @@ class CardFactory
       wait: 2
       health: 4
       dmg: 1
-      abilities: [ ability.Damage ]
+      getAbilities: -> [ new ability.Damage() ]
 
     soldier:
       wait: 2
       health: 5
       dmg: 1
-      abilities: [ ability.Damage ]
+      getAbilities: -> [ new ability.Damage() ]
 
 window.cardFactory = new CardFactory()

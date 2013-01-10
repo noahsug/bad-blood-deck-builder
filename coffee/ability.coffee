@@ -24,14 +24,20 @@ class Sap extends Ability
   constructor: (@amount=1) ->
 
   onAttack: ->
-    @target().effects.dmgModifier -=1
+    @target().effects.dmgModifier -= @amount
 exportClass Sap
 
 class Trap extends Ability
   constructor: (@amount=1) ->
 
   onAttack: ->
-    console.log '?'
     if Math.random() < .75
       @randomTarget()?.effects.skipAction = true
 exportClass Trap
+
+class PayLife extends Ability
+  constructor: (@amount=1) ->
+
+  onAttack: ->
+    @card.health -= @amount
+exportClass PayLife

@@ -1,7 +1,7 @@
 exports = window
 
-exports.addCard = (dmg, health, wait, abilities...) ->
-  abilities = [ability.Damage] if abilities.length is 0
+exports.addCard = (dmg, health, wait, getAbilities) ->
+  getAbilities ?= -> [new ability.Damage()]
   name = "#{dmg}/#{health}/#{wait}"
-  cardFactory.cards[name] = { dmg, health, wait, abilities }
+  cardFactory.cards[name] = { dmg, health, wait, getAbilities }
   name

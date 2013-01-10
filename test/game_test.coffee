@@ -68,7 +68,7 @@ describe 'A game', ->
   it '2/10/2 always loses to 1/4/2 with sap', ->
     forEachPlayerGoingFirst ->
       player1.setCards addCard 2, 10, 2
-      player2.setCards addCard 1, 4, 2, ability.Damage, ability.Sap
+      player2.setCards addCard 1, 4, 2, -> [new ability.Damage(), new ability.Sap()]
       expect(game.run()).toBe false
 
   it '1/2/2 with trap can sometimes beat a 10/2/2', ->
@@ -76,7 +76,13 @@ describe 'A game', ->
     for i in [1..4]
       createGame()
       opponentGoesFirst()
-      player1.setCards addCard 1, 2, 2, ability.Damage, ability.Trap
+      player1.setCards addCard 1, 2, 2, -> [new ability.Damage(), new ability.Trap()]
       player2.setCards addCard 10, 2, 2
       wonAtLeastOnce = true if game.run()
     expect(wonAtLeastOnce).toBe true
+
+  it '1/20/2 always beats a 1/20/2 with pay life', ->
+    forEachPlayerGoingFirst ->
+      player1.setCards addCard 1, 20, 2
+      player2.setCards addCard 1, 20, 2, -> [new ability.Damage(), new ability.PayLife()]
+      expect(game.run()).toBe true
