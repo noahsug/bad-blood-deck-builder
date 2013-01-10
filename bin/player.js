@@ -15,23 +15,26 @@
       this.deck = [];
     }
 
+    Player.prototype.setOpponent = function(opponent) {
+      this.opponent = opponent;
+    };
+
     Player.prototype.setCards = function() {
-      var cardNames, name;
+      var card, cardNames, name, _i, _len;
       cardNames = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      this.deck = shuffle((function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = cardNames.length; _i < _len; _i++) {
-          name = cardNames[_i];
-          _results.push(cardFactory.create(name));
-        }
-        return _results;
-      })());
+      this.deck = [];
+      for (_i = 0, _len = cardNames.length; _i < _len; _i++) {
+        name = cardNames[_i];
+        card = cardFactory.create(name);
+        this.deck.push(card);
+        card.owner = this;
+      }
+      shuffle(this.deck);
       return this.id = ((function() {
-        var _i, _len, _results;
+        var _j, _len1, _results;
         _results = [];
-        for (_i = 0, _len = cardNames.length; _i < _len; _i++) {
-          name = cardNames[_i];
+        for (_j = 0, _len1 = cardNames.length; _j < _len1; _j++) {
+          name = cardNames[_j];
           _results.push(name);
         }
         return _results;
@@ -47,6 +50,7 @@
         card.wait -= 1;
         if (card.wait <= 0) {
           this.field.push(card);
+          card.position = this.field.length - 1;
         } else {
           newWaiting.push(card);
         }
@@ -60,13 +64,13 @@
       }
     };
 
-    Player.prototype.attack = function(opponent) {
-      var card, i, _i, _len, _ref, _results;
+    Player.prototype.attack = function() {
+      var card, _i, _len, _ref, _results;
       _ref = this.field;
       _results = [];
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        card = _ref[i];
-        _results.push(card.attack(opponent, i));
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        card = _ref[_i];
+        _results.push(card.attack());
       }
       return _results;
     };
@@ -87,6 +91,7 @@
         card = _ref[_i];
         if (card.isAlive()) {
           newField.push(card);
+          card.position = newField.length - 1;
         }
       }
       return this.field = newField;

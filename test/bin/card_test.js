@@ -8,33 +8,34 @@
       return soldier = cardFactory.create(addCard(1, 5, 2));
     });
     attack = function(attackingCard, defendingCard) {
-      var opponent;
-      opponent = {
-        getTargetAt: function() {
-          return defendingCard;
-        }
+      var opponent, player;
+      player = {};
+      opponent = {};
+      opponent.getTargetAt = function() {
+        return defendingCard;
       };
-      return attackingCard.attack(opponent);
+      opponent.opponent = player;
+      defendingCard.owner = opponent;
+      player.opponent = opponent;
+      player.getTargetAt = function() {
+        return attackingCard;
+      };
+      attackingCard.owner = player;
+      return attackingCard.attack();
     };
     it('is created using a card factory', function() {
       return expect(wolf).toBeDefined();
     });
-    it('has wait, health, dmg, attackAbilities and defendAbilities', function() {
+    it('has wait, health, dmg and abilities', function() {
       expect(wolf.wait).toBeDefined();
       expect(wolf.health).toBeDefined();
       expect(wolf.dmg).toBeDefined();
-      expect(wolf.attackAbilities).toBeDefined();
-      return expect(wolf.defendAbilities).toBeDefined();
+      return expect(wolf.abilities).toBeDefined();
     });
     it('can attack another card', function() {
       expect(soldier.health).toBe(cardFactory.cards.soldier.health);
       attack(wolf, soldier);
       return expect(soldier.health).toBe(cardFactory.cards.soldier.health - 1);
-    });
-    it('defends when attacked', function() {
-      spyOn(soldier, 'defend');
-      attack(wolf, soldier);
-      return expect(soldier.defend).toHaveBeenCalled();
     });
     return it('dies when health is 0 or less', function() {
       var oneHealthCreature;

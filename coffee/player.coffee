@@ -6,8 +6,15 @@ class Player extends Target
     @waiting = []
     @deck = []
 
+  setOpponent: (@opponent) ->
+
   setCards: (cardNames...) ->
-    @deck = shuffle (cardFactory.create name for name in cardNames)
+    @deck = []
+    for name in cardNames
+      card = cardFactory.create name
+      @deck.push card
+      card.owner = this
+    shuffle @deck
     @id = (name for name in cardNames).join ', '
 
   reduceWait: ->
@@ -16,6 +23,7 @@ class Player extends Target
       card.wait -= 1
       if card.wait <= 0
         @field.push card
+        card.position = @field.length - 1
       else
         newWaiting.push card
     @waiting = newWaiting
@@ -24,9 +32,9 @@ class Player extends Target
     if @deck.length > 0
       @waiting.push @deck.pop()
 
-  attack: (opponent) ->
-    for card, i in @field
-      card.attack opponent, i
+  attack: ->
+    for card in @field
+      card.attack()
 
   getTargetAt: (index) ->
     if @field.length > index and @field[index].isAlive()
@@ -37,7 +45,9 @@ class Player extends Target
   removeDead: ->
     newField = []
     for card in @field
-      newField.push card if card.isAlive()
+      if card.isAlive()
+        newField.push card
+        card.position = newField.length - 1
     @field = newField
 
   isAlive: ->

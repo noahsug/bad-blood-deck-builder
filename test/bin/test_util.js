@@ -3,22 +3,17 @@
 
   exports = window;
 
-  exports.addCard = function(dmg, health, wait, attackAbilities, defendingAbilities) {
+  exports.addCard = function(dmg, health, wait, abilities) {
     var name;
-    if (attackAbilities == null) {
-      attackAbilities = [];
+    if (abilities == null) {
+      abilities = [ability.Damage];
     }
-    if (defendingAbilities == null) {
-      defendingAbilities = [];
-    }
-    attackAbilities.push(new ability.Damage());
     name = "" + dmg + "/" + health + "/" + wait;
     cardFactory.cards[name] = {
       dmg: dmg,
       health: health,
       wait: wait,
-      attackAbilities: attackAbilities,
-      defendingAbilities: defendingAbilities
+      abilities: abilities
     };
     return name;
   };

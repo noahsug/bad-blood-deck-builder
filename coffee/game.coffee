@@ -7,6 +7,8 @@ class Game
   setPlayers: (player, opponent) ->
     player.name = 'Player'
     opponent.name = 'Opponent'
+    player.setOpponent opponent
+    opponent.setOpponent player
     @players = [player, opponent]
 
   run: ->
@@ -22,7 +24,7 @@ class Game
     attacker.reduceWait()
     defender.reduceWait()
     attacker.drawCard()
-    attacker.attack defender
+    attacker.attack()
     attacker.removeDead()
     defender.removeDead()
     @turn++

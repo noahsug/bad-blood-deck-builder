@@ -4,26 +4,27 @@ class Card extends Target
     super initHealth
     @dmg = @initDmg
     @wait = @initWait
-    @effects = []
-    @attackAbilities = []
-    @defendAbilities = []
+    @abilities = []
+    @position = undefined
+    @owner = undefined
+    @opponent = undefined
+    @initializeEffects()
 
-  addAttackAbility: (ability) ->
+  initializeEffects: ->
+    @effects = {}
+    @effects.dmgModifier = 0
+
+  addAbility: (ability) ->
     ability.setCard this
-    @attackAbilities.push ability
+    @abilities.push ability
 
-  addDefendAbility: (ability) ->
-    ability.setCard this
-    @defendAbilities.push ability
+  attack: ->
+    @emit 'preattack'
+    if @getDmg() > 0
+      @emit 'attack'
 
-  attack: (opponent, position) ->
-    for ability in @attackAbilities
-      ability.actOn opponent, position
-    opponent.getTargetAt(position).defend this
-
-  defend: (target) ->
-    for ability in @defendAbilities
-      ability.actOn target
+  getDmg: ->
+    @dmg += @effects.dmgModifier
 
   getState: ->
     "#{@dmg}/#{@health}/#{@wait}"

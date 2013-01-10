@@ -4,6 +4,10 @@ describe 'A player', ->
   beforeEach ->
     player = new Player 5
     opponent = new Player 5
+    opponent.name = 'opponent'
+    player.name = 'player'
+    player.setOpponent opponent
+    opponent.setOpponent player
 
   summonSlime = ->
     slime = addCard 3, 1, 1
@@ -63,30 +67,30 @@ describe 'A player', ->
   it 'returns itself if no card exists at the given index', ->
     expect(player.getTargetAt(0)).toBe player
 
-  it 'can attack and kill another player attack(player)', ->
+  it 'can attack and kill another player attack()', ->
     summonSlime()
-    player.attack opponent
+    player.attack()
     expect(opponent.health).toBe 2
     player.attack opponent
     expect(opponent.isAlive()).toBe false
 
-  it 'can attack and kill another card with attack(player)', ->
+  it 'can attack and kill another card with attack()', ->
     summonSlime()
     opponent.reduceWait()
-    player.attack opponent
+    player.attack()
     expect(opponent.field[0].isAlive()).toBe false
     expect(opponent.health).toBe 5
 
   it 'can remove dead cards with removeDead()', ->
     summonSlime()
     opponent.reduceWait()
-    player.attack opponent
+    player.attack()
     opponent.removeDead()
     expect(opponent.field.length).toBe 0
 
   it 'is dead when no cards are left in the deck, waiting area and field', ->
     summonSlime()
     opponent.reduceWait()
-    player.attack opponent
+    player.attack()
     opponent.removeDead()
     expect(opponent.isAlive()).toBe false

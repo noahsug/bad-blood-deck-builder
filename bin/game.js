@@ -11,6 +11,8 @@
     Game.prototype.setPlayers = function(player, opponent) {
       player.name = 'Player';
       opponent.name = 'Opponent';
+      player.setOpponent(opponent);
+      opponent.setOpponent(player);
       return this.players = [player, opponent];
     };
 
@@ -32,7 +34,7 @@
       attacker.reduceWait();
       defender.reduceWait();
       attacker.drawCard();
-      attacker.attack(defender);
+      attacker.attack();
       attacker.removeDead();
       defender.removeDead();
       return this.turn++;

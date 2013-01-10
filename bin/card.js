@@ -13,40 +13,32 @@
       Card.__super__.constructor.call(this, initHealth);
       this.dmg = this.initDmg;
       this.wait = this.initWait;
-      this.effects = [];
-      this.attackAbilities = [];
-      this.defendAbilities = [];
+      this.abilities = [];
+      this.position = void 0;
+      this.owner = void 0;
+      this.opponent = void 0;
+      this.initializeEffects();
     }
 
-    Card.prototype.addAttackAbility = function(ability) {
+    Card.prototype.initializeEffects = function() {
+      this.effects = {};
+      return this.effects.dmgModifier = 0;
+    };
+
+    Card.prototype.addAbility = function(ability) {
       ability.setCard(this);
-      return this.attackAbilities.push(ability);
+      return this.abilities.push(ability);
     };
 
-    Card.prototype.addDefendAbility = function(ability) {
-      ability.setCard(this);
-      return this.defendAbilities.push(ability);
-    };
-
-    Card.prototype.attack = function(opponent, position) {
-      var ability, _i, _len, _ref;
-      _ref = this.attackAbilities;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        ability = _ref[_i];
-        ability.actOn(opponent, position);
+    Card.prototype.attack = function() {
+      this.emit('preattack');
+      if (this.getDmg() > 0) {
+        return this.emit('attack');
       }
-      return opponent.getTargetAt(position).defend(this);
     };
 
-    Card.prototype.defend = function(target) {
-      var ability, _i, _len, _ref, _results;
-      _ref = this.defendAbilities;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        ability = _ref[_i];
-        _results.push(ability.actOn(target));
-      }
-      return _results;
+    Card.prototype.getDmg = function() {
+      return this.dmg += this.effects.dmgModifier;
     };
 
     Card.prototype.getState = function() {

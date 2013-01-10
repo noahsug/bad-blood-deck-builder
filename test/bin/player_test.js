@@ -5,7 +5,11 @@
     player = opponent = void 0;
     beforeEach(function() {
       player = new Player(5);
-      return opponent = new Player(5);
+      opponent = new Player(5);
+      opponent.name = 'opponent';
+      player.name = 'player';
+      player.setOpponent(opponent);
+      return opponent.setOpponent(player);
     });
     summonSlime = function() {
       var slime;
@@ -68,31 +72,31 @@
     it('returns itself if no card exists at the given index', function() {
       return expect(player.getTargetAt(0)).toBe(player);
     });
-    it('can attack and kill another player attack(player)', function() {
+    it('can attack and kill another player attack()', function() {
       summonSlime();
-      player.attack(opponent);
+      player.attack();
       expect(opponent.health).toBe(2);
       player.attack(opponent);
       return expect(opponent.isAlive()).toBe(false);
     });
-    it('can attack and kill another card with attack(player)', function() {
+    it('can attack and kill another card with attack()', function() {
       summonSlime();
       opponent.reduceWait();
-      player.attack(opponent);
+      player.attack();
       expect(opponent.field[0].isAlive()).toBe(false);
       return expect(opponent.health).toBe(5);
     });
     it('can remove dead cards with removeDead()', function() {
       summonSlime();
       opponent.reduceWait();
-      player.attack(opponent);
+      player.attack();
       opponent.removeDead();
       return expect(opponent.field.length).toBe(0);
     });
     return it('is dead when no cards are left in the deck, waiting area and field', function() {
       summonSlime();
       opponent.reduceWait();
-      player.attack(opponent);
+      player.attack();
       opponent.removeDead();
       return expect(opponent.isAlive()).toBe(false);
     });
