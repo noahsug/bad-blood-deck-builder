@@ -97,3 +97,10 @@ describe 'A game', ->
       won++ if game.run()
     expect(won).toBe 0
 
+  it '2/10/2 sometimes beats a 1/7/2 with poison 2', ->
+    won = 0
+    forEachPlayerGoingFirst ->
+      player1.setCards addCard 2, 10, 2
+      player2.setCards addCard 1, 7, 2, -> [new ability.Damage(), new ability.Poison(2)]
+      won++ if game.run()
+    expect(won).toBe 1

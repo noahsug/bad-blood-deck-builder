@@ -14,10 +14,10 @@ class Card extends Target
     @abilities.push ability
 
   attack: ->
-    return if @effects.skipAction
     @emit 'preattack'
-    if @getDmg() > 0
+    if @getDmg() > 0 and not @effects.skipAction
       @emit 'attack'
+    @emit 'postattack'
 
   getDmg: ->
     @dmg + @effects.dmgModifier

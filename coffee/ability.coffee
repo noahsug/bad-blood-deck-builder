@@ -53,3 +53,12 @@ class Heal extends Ability
       lowestHp = card if not lowestHp or card.health < lowestHp.health
     lowestHp?.heal @amount
 exportClass Heal
+
+class Poison extends Ability
+  constructor: (@amount=1) ->
+
+  onAttack: ->
+    target = @target()
+    target.once 'postattack', =>
+      target.takeDmg @amount if target.isAlive()
+exportClass Poison
