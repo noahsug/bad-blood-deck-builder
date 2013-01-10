@@ -9,6 +9,12 @@ class Ability
   target: ->
     @card.owner.opponent.getTargetAt @card.position
 
+  randomTarget: ->
+    alive = []
+    for card in @card.owner.opponent.field
+      alive.push card
+    getRandomElement alive
+
 class Damage extends Ability
   onAttack: ->
     @target().onAttacked @card, @card.getDmg()
@@ -25,5 +31,7 @@ class Trap extends Ability
   constructor: (@amount=1) ->
 
   onAttack: ->
-    @target().effects.dmgModifier -=1
+    console.log '?'
+    if Math.random() < .75
+      @randomTarget()?.effects.skipAction = true
 exportClass Trap

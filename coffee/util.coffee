@@ -28,6 +28,9 @@ exports.pad = (text, width) ->
   else
     text + (' ' for i in [text.length..width-1]).join('')
 
+exports.getRandomElement = (arr) ->
+  arr[Math.floor(Math.random() * arr.length)]
+
 exports.verbose = false
 
 exports.log = (text...) ->

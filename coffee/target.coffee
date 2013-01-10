@@ -11,6 +11,7 @@ class Target extends EventEmitter
   initializeEffects: ->
     @effects = {}
     @effects.dmgModifier = 0
+    @effects.skipAction = false
 
   isAlive: ->
     @health > 0

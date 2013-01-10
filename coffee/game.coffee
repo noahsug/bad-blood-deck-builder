@@ -31,7 +31,7 @@ class Game
     attacker.removeDead()
     defender.removeDead()
     @turn++
-    @printState
+    #@printState()
 
   isTie: ->
     @turn > 100

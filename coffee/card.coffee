@@ -14,6 +14,7 @@ class Card extends Target
     @abilities.push ability
 
   attack: ->
+    return if @effects.skipAction
     @emit 'preattack'
     if @getDmg() > 0
       @emit 'attack'

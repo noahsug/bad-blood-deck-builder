@@ -70,3 +70,13 @@ describe 'A game', ->
       player1.setCards addCard 2, 10, 2
       player2.setCards addCard 1, 4, 2, ability.Damage, ability.Sap
       expect(game.run()).toBe false
+
+  it '1/2/2 with trap can sometimes beat a 10/2/2', ->
+    wonAtLeastOnce = false
+    for i in [1..4]
+      createGame()
+      opponentGoesFirst()
+      player1.setCards addCard 1, 2, 2, ability.Damage, ability.Trap
+      player2.setCards addCard 10, 2, 2
+      wonAtLeastOnce = true if game.run()
+    expect(wonAtLeastOnce).toBe true
