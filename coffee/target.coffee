@@ -6,6 +6,11 @@ class Target extends EventEmitter
   constructor: (@initHealth) ->
     super()
     @health = @initHealth
+    @initializeEffects()
+
+  initializeEffects: ->
+    @effects = {}
+    @effects.dmgModifier = 0
 
   isAlive: ->
     @health > 0
@@ -16,7 +21,5 @@ class Target extends EventEmitter
 
   takeDmg: (dmg) ->
     @health -= dmg
-
-  changeEffect: ->
 
 window.Target = Target

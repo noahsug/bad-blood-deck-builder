@@ -11,11 +11,14 @@ class Game
     opponent.setOpponent player
     @players = [player, opponent]
 
+  getFirstTurnOffset: ->
+    if flipCoin() then 0 else 1
+
   run: ->
-    firstTurnOffset = if flipCoin() then 0 else 1
+    @firstTurnOffset = @getFirstTurnOffset()
     while @players[0].isAlive() and @players[1].isAlive() and not @isTie()
-      attacker = @players[(@turn + firstTurnOffset) % 2]
-      defender = @players[(@turn + firstTurnOffset + 1) % 2]
+      attacker = @players[(@turn + @firstTurnOffset) % 2]
+      defender = @players[(@turn + @firstTurnOffset + 1) % 2]
       @takeTurn attacker, defender
     console.warn 'ITS A TIE!!!!', @turn if @isTie()
     @players[0].isAlive() and not @isTie()
@@ -28,12 +31,13 @@ class Game
     attacker.removeDead()
     defender.removeDead()
     @turn++
-    #@printState attacker
+    @printState
 
   isTie: ->
     @turn > 100
 
-  printState: (attacker) ->
+  printState: ->
+    attacker = @players[(@turn + @firstTurnOffset) % 2]
     console.log "-------------------- TURN #{@turn} - #{attacker.name} --------------------"
     console.log "# Player"
     @players[0].printState()

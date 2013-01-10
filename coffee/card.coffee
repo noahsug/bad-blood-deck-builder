@@ -8,11 +8,6 @@ class Card extends Target
     @position = undefined
     @owner = undefined
     @opponent = undefined
-    @initializeEffects()
-
-  initializeEffects: ->
-    @effects = {}
-    @effects.dmgModifier = 0
 
   addAbility: (ability) ->
     ability.setCard this
@@ -24,7 +19,7 @@ class Card extends Target
       @emit 'attack'
 
   getDmg: ->
-    @dmg += @effects.dmgModifier
+    @dmg + @effects.dmgModifier
 
   getState: ->
     "#{@dmg}/#{@health}/#{@wait}"

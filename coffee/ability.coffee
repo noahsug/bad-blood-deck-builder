@@ -20,3 +20,10 @@ class Sap extends Ability
   onAttack: ->
     @target().effects.dmgModifier -=1
 exportClass Sap
+
+class Trap extends Ability
+  constructor: (@amount=1) ->
+
+  onAttack: ->
+    @target().effects.dmgModifier -=1
+exportClass Trap
