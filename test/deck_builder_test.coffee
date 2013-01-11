@@ -4,6 +4,7 @@ describe 'A deck builder', ->
   beforeEach ->
     builder = new DeckBuilder()
     builder.setDeckSize 6
+    builder.setPlayerHealth 20
     builder.NUM_TRIALS = 500
 
   it "6 1/2/2's is the best deck out of a card pool of 1/2/2's and 1/1/2's", ->

@@ -2,25 +2,26 @@ class DeckBuilder
 
   NUM_TRIALS: 7500
 
-  PLAYER_HP: 25
-
   constructor: ->
     @log = getLogger this
     @opponentDecks = []
 
   addOpponentDeck: (opponentCards...) ->
-    @opponentDecks.push opponentCards
+    @opponentDecks.push opponentCards.sort()
 
   setDeckSize: (@deckSize) ->
 
+  setPlayerHealth: (@playerHealth) ->
+
   setPlayerCards: (@playerCards...) ->
+    @playerCards.sort()
 
   printResults: (decks) ->
     for i in [decks.length - 1..0]
       playerDeck = decks[i]
       @log "##{i+1} wins #{Math.round(playerDeck.totalScore)}% #{playerDeck}"
       for opponentDeck in @opponentDecks
-        @log '  ', playerDeck.scoreMap[opponentDeck], 'vs', opponentDeck.toString()
+        @log '  ', Math.round(playerDeck.scoreMap[opponentDeck]) + '%', 'vs', opponentDeck.toString()
 
   getBestDecks: ->
     playerDecks = @getPossibleDecks()
@@ -42,15 +43,17 @@ class DeckBuilder
   scoreDeck: (playerDeck, opponentDeck) ->
     wins = 0
     for i in [1..@NUM_TRIALS]
+      verbose.push 'Game' if i is 1 and 'DeckBuilder' in verbose
+      verbose.pop() if i is 2 and 'DeckBuilder' in verbose
       game = @createGame playerDeck, opponentDeck
       wins++ if game.run()
     wins * 100 / @NUM_TRIALS
 
   createGame: (playerDeck, opponentDeck) ->
     game = new Game()
-    player = new Player @PLAYER_HP
+    player = new Player @playerHealth
     player.setCards playerDeck...
-    opponent = new Player @PLAYER_HP
+    opponent = new Player @playerHealth
     opponent.setCards opponentDeck...
     game.setPlayers player, opponent
     game

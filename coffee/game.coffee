@@ -21,8 +21,11 @@ class Game
       attacker = @players[(@turn + @firstTurnOffset) % 2]
       defender = @players[(@turn + @firstTurnOffset + 1) % 2]
       @takeTurn attacker, defender
-    console.warn 'ITS A TIE!!!!', @turn if @isTie()
-    @players[0].isAlive() and not @isTie()
+    if @isTie()
+      @log 'ITS A TIE!!!!', @turn, @players[0].health, @players[1].health, @players
+      return @players[0].health > @players[1].health
+    else
+      @players[0].isAlive()
 
   takeTurn: (attacker, defender) ->
     attacker.reduceWait()
@@ -31,15 +34,15 @@ class Game
     attacker.attack()
     attacker.removeDead()
     defender.removeDead()
-    @turn++
     @log @getReadableState()
+    @turn++
 
   isTie: ->
     @turn > 100
 
   getReadableState: ->
     attacker = @players[(@turn + @firstTurnOffset) % 2]
-    msg = "-------------------- TURN #{@turn} - #{attacker.name} --------------------\n"
+    msg = "-------------------- TURN #{@turn+1} - #{attacker.name} --------------------\n"
     msg += "# Player\n"
     msg += @players[0].getReadableState() + '\n'
     msg += "# Opponent\n"

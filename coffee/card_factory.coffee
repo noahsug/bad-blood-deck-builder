@@ -11,6 +11,7 @@ class CardFactory
 
   cards:
 
+    ## Humans
     'Junior Cleric':
       wait: 8
       dmg: 1
@@ -65,6 +66,13 @@ class CardFactory
       health: 4
       getAbilities: -> [ new ability.PayLife() ]
 
+    'Christina':
+      wait: 10
+      dmg: 3
+      health: 8
+      getAbilities: -> []
+
+    ## Warwolves
     'Werebull':
       wait: 6
       dmg: 1
@@ -82,5 +90,11 @@ class CardFactory
       dmg: 2
       health: 3
       getAbilities: -> []
+
+    'Jake':
+      wait: 10
+      dmg: 3
+      health: 5
+      getAbilities: -> [new ability.Sap()]
 
 window.cardFactory = new CardFactory()
