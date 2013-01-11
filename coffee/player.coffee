@@ -55,9 +55,9 @@ class Player extends Target
   isAlive: ->
     super() and (@field.length > 0 or @deck.length > 0 or @waiting.length > 0)
 
-  printState: ->
-    console.log "Health: #{@health}, Deck: #{@deck.length}, Waiting: #{@waiting.length}"
-    console.log ("[ #{card.getState()} ]" for card in @field).join ' '
+  getReadableState: ->
+    msg = "Health: #{@health}, Deck: #{@deck.length}, Waiting: #{@waiting.length}\n"
+    msg += ("[ #{card.getState()} ]" for card in @field).join ' '
 
   toString: ->
     @id

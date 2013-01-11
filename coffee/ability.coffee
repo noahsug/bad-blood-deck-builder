@@ -35,10 +35,10 @@ class Sap extends Ability
 exportClass Sap
 
 class Trap extends Ability
-  constructor: (@amount=1) ->
+  constructor: (@amount=.75) ->
 
-  onAttack: ->
-    if Math.random() < .75
+  onPreattack: ->
+    if Math.random() < @amount
       @randomTarget()?.effects.skipAction = true
 exportClass Trap
 
@@ -53,11 +53,16 @@ class Heal extends Ability
   constructor: (@amount=1) ->
 
   onPreattack: ->
-    lowestHp = undefined
+    lowestHp = Infinity
     for card in @card.owner.field
       continue if not card.isAlive() or card.health is card.initHealth
-      lowestHp = card if not lowestHp or card.health < lowestHp.health
-    lowestHp?.heal @amount
+      lowestHp = card.health if card.health < lowestHp
+    return if lowestHp is Infinity
+    lowestHpCards = []
+    for card in @card.owner.field
+      continue if not card.isAlive() or card.health is card.initHealth
+      lowestHpCards.push card if card.health is lowestHp
+    getRandomElement(lowestHpCards).heal @amount
 exportClass Heal
 
 class Poison extends Ability

@@ -1,37 +1,40 @@
 class DeckBuilder
 
-  NUM_TRIALS: 10000
+  NUM_TRIALS: 7500
 
   PLAYER_HP: 25
 
   constructor: ->
+    @log = getLogger this
     @opponentDecks = []
 
   addOpponentDeck: (opponentCards...) ->
     @opponentDecks.push opponentCards
+
+  setDeckSize: (@deckSize) ->
 
   setPlayerCards: (@playerCards...) ->
 
   printResults: (decks) ->
     for i in [decks.length - 1..0]
       playerDeck = decks[i]
-      log "##{i+1} wins #{Math.round(playerDeck.totalScore)}% #{playerDeck}"
+      @log "##{i+1} wins #{Math.round(playerDeck.totalScore)}% #{playerDeck}"
       for opponentDeck in @opponentDecks
-        log '  ', playerDeck.scoreMap[opponentDeck], 'vs', opponentDeck.toString()
+        @log '  ', playerDeck.scoreMap[opponentDeck], 'vs', opponentDeck.toString()
 
   getBestDecks: ->
     playerDecks = @getPossibleDecks()
     for playerDeck in playerDecks
       playerDeck.totalScore = 0
       playerDeck.scoreMap = {}
-      log 'Intermediate scores for', playerDeck.toString()
+      @log 'Intermediate scores for', playerDeck.toString()
       for opponentDeck in @opponentDecks
         score = @scoreDeck playerDeck, opponentDeck
-        log score, 'vs', opponentDeck.toString()
+        @log score, 'vs', opponentDeck.toString()
         playerDeck.scoreMap[opponentDeck] = score
         playerDeck.totalScore += score
       playerDeck.totalScore /= @opponentDecks.length
-      log ''
+      @log ''
     bestDecks = playerDecks.sort (a, b) -> b.totalScore - a.totalScore
     @printResults bestDecks
     bestDecks
@@ -53,21 +56,20 @@ class DeckBuilder
     game
 
   getPossibleDecks: ->
-    maxDeckSize = 6
     uniqueDecks = {}
     @forEachDeckCombination (cardIndexes) =>
       deck = (@playerCards[i] for i in cardIndexes)
       uniqueDecks[deck.sort()] = deck
     possibleDecks = (deck for id, deck of uniqueDecks)
-    log possibleDecks.length, 'possible decks found'
-    log ''
+    @log possibleDecks.length, 'possible decks found'
+    @log ''
     possibleDecks
 
-  forEachDeckCombination: (callback, position=0, indexes=new Array(6)) ->
+  forEachDeckCombination: (callback, position=0, indexes=new Array(@deckSize)) ->
     start = if position is 0 then 0 else indexes[position-1] + 1
     for i in [start..@playerCards.length-1]
       indexes[position] = i
-      if position is 5
+      if position is @deckSize - 1
         callback indexes
       else if i < @playerCards.length - 1
         @forEachDeckCombination callback, position + 1, indexes

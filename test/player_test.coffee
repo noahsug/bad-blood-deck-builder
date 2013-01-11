@@ -18,18 +18,18 @@ describe 'A player', ->
     player.reduceWait()
 
   it 'gets a deck of cards with setCards()', ->
-    player.setCards 'wolf', 'soldier', 'wolf'
+    player.setCards 'Residents', 'Exorcist', 'Residents'
     expect(player.deck.length).toBe 3
 
   it 'draws a card from the deck into the waiting area with drawCard()', ->
-    player.setCards 'wolf', 'soldier'
+    player.setCards 'Residents', 'Exorcist'
     expect(player.waiting.length).toBe 0
     player.drawCard()
     expect(player.waiting.length).toBe 1
     expect(player.deck.length).toBe 1
 
   it 'does nothing trying to draw a card with an empty deck', ->
-    player.setCards 'wolf'
+    player.setCards 'Residents'
     player.drawCard()
     expect(player.waiting.length).toBe 1
     expect(player.deck.length).toBe 0

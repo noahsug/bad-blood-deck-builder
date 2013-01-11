@@ -24,8 +24,8 @@ describe 'A game', ->
 
   it 'has a winner', ->
     createGame()
-    player.setCards 'wolf'
-    opponent.setCards 'wolf'
+    player.setCards 'Residents'
+    opponent.setCards 'Residents'
 
     expect(game.run()).toBeDefined()
 
@@ -68,7 +68,7 @@ describe 'A game', ->
   it '2/10/2 always loses to 1/4/2 with sap', ->
     forEachPlayerGoingFirst ->
       player.setCards addCard 2, 10, 2
-      opponent.setCards addCard 1, 4, 2, -> [new ability.Damage(), new ability.Sap()]
+      opponent.setCards addCard 1, 4, 2, -> [new ability.Sap()]
       expect(game.run()).toBe false
 
   it '1/2/2 with trap can sometimes beat a 10/2/2', ->
@@ -76,7 +76,7 @@ describe 'A game', ->
     for i in [1..4]
       createGame()
       opponentGoesFirst()
-      player.setCards addCard 1, 2, 2, -> [new ability.Damage(), new ability.Trap()]
+      player.setCards addCard 1, 2, 2, -> [new ability.Trap()]
       opponent.setCards addCard 10, 2, 2
       won++ if game.run()
     expect(won > 0).toBe true
@@ -85,7 +85,7 @@ describe 'A game', ->
     won = 0
     forEachPlayerGoingFirst ->
       player.setCards addCard 1, 10, 2
-      opponent.setCards addCard 1, 20, 2, -> [new ability.Damage(), new ability.PayLife()]
+      opponent.setCards addCard 1, 20, 2, -> [new ability.PayLife()]
       won++ if game.run()
     expect(won).toBe 1
 
@@ -93,7 +93,7 @@ describe 'A game', ->
     won = 0
     forEachPlayerGoingFirst ->
       player.setCards addCard 5, 20, 2
-      opponent.setCards addCard 1, 6, 2, -> [new ability.Damage(), new ability.Heal(5)]
+      opponent.setCards addCard 1, 6, 2, -> [new ability.Heal(5)]
       won++ if game.run()
     expect(won).toBe 0
 
@@ -101,7 +101,7 @@ describe 'A game', ->
     won = 0
     forEachPlayerGoingFirst ->
       player.setCards addCard 2, 10, 2
-      opponent.setCards addCard 1, 7, 2, -> [new ability.Damage(), new ability.Poison(2)]
+      opponent.setCards addCard 1, 7, 2, -> [new ability.Poison(2)]
       won++ if game.run()
     expect(won).toBe 1
 
@@ -109,7 +109,7 @@ describe 'A game', ->
     createGame()
     playerGoesFirst()
     playerCard = addCard 2, 5, 2
-    opponentCard = addCard 1, 6, 2, -> [new ability.Damage(), new ability.AdjacentAttackBoost()]
+    opponentCard = addCard 1, 6, 2, -> [new ability.AdjacentAttackBoost()]
     player.setCards (playerCard for i in [1..3])...
     opponent.setCards (opponentCard for i in  [1..3])...
 

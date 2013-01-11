@@ -31,7 +31,8 @@ exports.pad = (text, width) ->
 exports.getRandomElement = (arr) ->
   arr[Math.floor(Math.random() * arr.length)]
 
-exports.verbose = false
+exports.verbose = ['DeckBuilder']
 
-exports.log = (text...) ->
-  console.log text... if exports.verbose
+exports.getLogger = (caller) ->
+  (text...) ->
+    console.log text... if caller.constructor.name in exports.verbose

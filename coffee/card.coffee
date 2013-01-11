@@ -20,6 +20,7 @@ class Card extends Target
     @emit 'preattack'
     if @dmg > 0 and not @effects.skipAction
       @emit 'attack'
+    @effects.skipAction = false
     @emit 'postattack'
 
   getState: ->

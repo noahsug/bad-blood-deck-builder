@@ -28,9 +28,9 @@ describe 'A card', ->
     expect(wolf.abilities).toBeDefined()
 
   it 'can attack another card', ->
-    expect(soldier.health).toBe cardFactory.cards.soldier.health
+    expect(soldier.health).toBe 5
     attack wolf, soldier
-    expect(soldier.health).toBe cardFactory.cards.soldier.health - 1
+    expect(soldier.health).toBe 4
 
   it 'dies when health is 0 or less', ->
     oneHealthCreature = cardFactory.create addCard 1, 1, 1

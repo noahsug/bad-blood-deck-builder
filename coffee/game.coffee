@@ -1,6 +1,7 @@
 class Game
 
   constructor: ->
+    @log = getLogger this
     @players = undefined
     @turn = 0
 
@@ -31,18 +32,17 @@ class Game
     attacker.removeDead()
     defender.removeDead()
     @turn++
-#    @printState()
+    @log @getReadableState()
 
   isTie: ->
     @turn > 100
 
-  printState: ->
+  getReadableState: ->
     attacker = @players[(@turn + @firstTurnOffset) % 2]
-    console.log "-------------------- TURN #{@turn} - #{attacker.name} --------------------"
-    console.log "# Player"
-    @players[0].printState()
-    console.log "# Opponent"
-    @players[1].printState()
-    console.log ''
+    msg = "-------------------- TURN #{@turn} - #{attacker.name} --------------------\n"
+    msg += "# Player\n"
+    msg += @players[0].getReadableState() + '\n'
+    msg += "# Opponent\n"
+    msg += @players[1].getReadableState() + '\n\n'
 
 window.Game = Game
